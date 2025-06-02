@@ -4,6 +4,8 @@ import math
 import cairosvg
 from PIL import Image
 
+from src.utils.conversion import svg_to_image
+
 
 def create_skill_image(
     icons: list[str], icon_size: int, per_lines: int | None, spacing: int
@@ -22,13 +24,9 @@ def create_skill_image(
     skill_image = Image.new("RGBA", (total_width, total_height), "rgba(0, 0, 0, 0)")
 
     for i, icon in enumerate(icons):
-        png_data = cairosvg.svg2png(
-            bytestring=icon, output_width=icon_size, output_height=icon_size
-        )
-        if not isinstance(png_data, bytes):
+        icon_image = svg_to_image(icon, icon_size)
+        if icon_image is None:
             continue
-
-        icon_image = Image.open(io.BytesIO(png_data)).convert("RGBA")
 
         row = i // per_lines
         col = i % per_lines
