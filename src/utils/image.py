@@ -10,6 +10,13 @@ from src.utils.conversion import svg_to_image
 def create_skill_image(
     icons: list[str], icon_size: int, per_lines: int | None, spacing: int
 ):
+    if not icons:
+        skill_image = Image.new("RGBA", (icon_size, icon_size), "rgba(0, 0, 0, 0)")
+        output_buffer = io.BytesIO()
+        skill_image.save(output_buffer, format="PNG")
+        output_buffer.seek(0)
+        return output_buffer
+
     num_icons = len(icons)
 
     if not per_lines or per_lines > num_icons or per_lines < 1:
